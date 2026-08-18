@@ -218,8 +218,11 @@ To reproduce: `uv run python benchmarks/run.py` (needs `ANTHROPIC_API_KEY` in `.
 
 Full rule: `~/.claude/CLAUDE.md` § Auto-merge — repo cá nhân. Repo-specific parts only here.
 
-- **Gate first, merge second.** This repo has GitHub Actions, so use GitHub's auto-merge: the PR
-  lands **when CI is green**, and does not land if CI is red. Never merge straight after opening.
+- **Gate first, merge second — but this repo has no PR gate.** Measured 2026-08-19: the only
+  workflow is `sync-skill.yml`, and it triggers on `push` to `main` with a path filter, **not on
+  `pull_request`**. So a PR here gets **zero checks**, and "CI is green" would be a claim about
+  something that never ran. The reviewer is whatever you ran locally — name it in the PR, or do
+  not merge.
 - **Method: `merge` commit.** No squash — it rewrites commits, which breaks evidence-based branch
   cleanup (`git cherry main <branch>` stops matching).
 - **Stop for human review** if the PR touches `hooks/`, `.github/workflows/`, or any credential
