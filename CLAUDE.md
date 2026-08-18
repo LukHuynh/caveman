@@ -213,3 +213,17 @@ To reproduce: `uv run python benchmarks/run.py` (needs `ANTHROPIC_API_KEY` in `.
 - Hook files must silent-fail on all filesystem errors. Never let hook crash block session start.
 - Any new flag file write must go through `safeWriteFlag()` in `caveman-config.js`. Direct `fs.writeFileSync` on predictable user-owned paths reopens the symlink-clobber attack surface.
 - Hooks must respect `CLAUDE_CONFIG_DIR` env var, not hardcode `~/.claude`. Same for `install.sh` / `install.ps1` / statusline scripts.
+
+## Auto-merge (ON — decided 2026-08-19)
+
+Full rule: `~/.claude/CLAUDE.md` § Auto-merge — repo cá nhân. Repo-specific parts only here.
+
+- **Gate first, merge second — but this repo has no PR gate.** Measured 2026-08-19: the only
+  workflow is `sync-skill.yml`, and it triggers on `push` to `main` with a path filter, **not on
+  `pull_request`**. So a PR here gets **zero checks**, and "CI is green" would be a claim about
+  something that never ran. The reviewer is whatever you ran locally — name it in the PR, or do
+  not merge.
+- **Method: `merge` commit.** No squash — it rewrites commits, which breaks evidence-based branch
+  cleanup (`git cherry main <branch>` stops matching).
+- **Stop for human review** if the PR touches `hooks/`, `.github/workflows/`, or any credential
+  file. A gate that approves its own change is not a gate.
